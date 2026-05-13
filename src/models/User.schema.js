@@ -34,9 +34,13 @@ const userSchema = mongoose.Schema({
         }
     ],
 
-    imageAvatar: {
+    avatar: {
+        type: String    
+    },
+    coverImage: {
         type: String
     },
+
 
     refreshToken: {
         type: String

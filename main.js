@@ -1,5 +1,5 @@
+import 'dotenv/config';
 import { DB_Name } from './constant.js'
-import dotenv from 'dotenv';
 import { DBConnection } from './connection.js';
 import { router } from './src/routes/user.route.js'
 import { app } from './app.js';
@@ -11,7 +11,6 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config();
 
 
 

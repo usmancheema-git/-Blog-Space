@@ -7,15 +7,23 @@ function renderRegister() {
       <form id="registerForm" class="form">
         <div class="form-group">
           <label>Username</label>
-          <input id="reg-username" type="text" placeholder="your_username" required />
+          <input id="reg-username" name="username" type="text" placeholder="your_username" required />
         </div>
         <div class="form-group">
           <label>Email</label>
-          <input id="reg-email" type="email" placeholder="you@example.com" required />
+          <input id="reg-email" name="email" type="email" placeholder="you@example.com" required />
         </div>
         <div class="form-group">
           <label>Password</label>
-          <input id="reg-password" type="password" placeholder="••••••••" required />
+          <input id="reg-password" name="password" type="password" placeholder="••••••••" required />
+        </div>
+        <div class="form-group">
+          <label>Avatar (Required)</label>
+          <input id="reg-avatar" name="avatar" type="file" accept="image/*" required />
+        </div>
+        <div class="form-group">
+          <label>Cover Image (Optional)</label>
+          <input id="reg-cover" name="coverImage" type="file" accept="image/*" />
         </div>
         <button type="submit" class="btn btn-primary">Register</button>
       </form>
@@ -49,12 +57,13 @@ function renderLogin() {
 function bindRegister() {
   document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const username = document.getElementById('reg-username').value.trim();
-    const email = document.getElementById('reg-email').value.trim();
-    const password = document.getElementById('reg-password').value.trim();
+    
+    const form = document.getElementById('registerForm');
+    const formData = new FormData(form);
+
     showToast('Registering...', 'info');
-    const { ok, data } = await apiFetch('POST', '/users/auth/register', { username, email, password });
-    showToast(data.msg, ok ? 'success' : 'error');
+    const { ok, data } = await apiFetch('POST', '/users/auth/register', formData);
+    showToast(data.msg || (ok ? 'Registration Successful' : 'Registration failed'), ok ? 'success' : 'error');
   });
 }
 

@@ -4,10 +4,24 @@ import { loginUser, registerUser, logoutUser } from '../controllers/userAuth.con
 import { aboutUpdate, getUserProfile, currentUser, updateAccountDetail } from '../controllers/userprofile.controller.js';
 import { userFollowersystem, userUnFollowersystem } from '../controllers/userFollow.controller.js'
 import { JwtVerification } from '../middlewares/jwt.auth.js';
+import { upload } from '../middlewares/multer.fileuploade.js';
 const router = Router();
 
 
-router.post('/auth/register', registerUser);
+router.post('/auth/register', upload.fields(
+    [
+        {
+            name: 'avatar',
+            maxCount: 1
+        },
+
+        {
+            name: 'coverImage',
+            maxCount: 1
+        }
+    ]
+), registerUser);
+
 router.post('/auth/login', loginUser);
 router.get('/auth/logout', JwtVerification, logoutUser);
 

@@ -1,6 +1,11 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { User } from "../models/User.schema.js";
 import { hashpassword, comparedPassword } from '../utils/hashpassword.utility.js';
+import { uploadOnCloudinary } from '../utils/cloudinary.js'
+import { ApiError } from "../utils/errorHadler.js";
+
+
+
 const registerUser = asyncHandler(async (req, res) => {
 
   const { username, email, password } = req.body;
@@ -23,10 +28,31 @@ const registerUser = asyncHandler(async (req, res) => {
     return res.status(400).json({ msg: ' User  already Exists' })
 
   }
+  const avatarLocalPath = req.files?.avatar?.[0]?.path;
+
+  let coverImageLocalPath;
+
+  if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+    coverImageLocalPath = req.files.coverImage[0].path
+  }
+
+
+  if (!avatarLocalPath) {
+    throw new ApiError(400, "Avatar file is required")
+  }
+
+  const avatar = await uploadOnCloudinary(avatarLocalPath)
+  const coverImage = await uploadOnCloudinary(coverImageLocalPath)
+
+  if (!avatar) {
+    throw new ApiError(500, "Failed to upload avatar to Cloudinary")
+  }
 
   const user = await User.create({
     username: username,
     email: email,
+    avatar: avatar,
+    coverImage: coverImage || "",
     password: hashedpassword
 
   })
@@ -67,20 +93,20 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   await user.save({ validateBeforeSave: false });
-  return  res.status(200).json({ accessToken, refreshToken, user: { username: req.cookies} })
+  return res.status(200).json({ accessToken, refreshToken, user: { username: req.cookies } })
 
 })
 
-const logoutUser = asyncHandler(async (req, res) =>{
-  
-  await User.findByIdAndUpdate( req.user._id,{
-    $unset:{
-      refreshToken : ""
+const logoutUser = asyncHandler(async (req, res) => {
+
+  await User.findByIdAndUpdate(req.user._id, {
+    $unset: {
+      refreshToken: ""
     }
-  },{
-    new : true
+  }, {
+    new: true
   })
-    return res.status(200).json({ msg: " User logged out successfully" });
+  return res.status(200).json({ msg: " User logged out successfully" });
 })
 
 const refreshTokengenration = asyncHandler((req, res) => {
@@ -88,8 +114,8 @@ const refreshTokengenration = asyncHandler((req, res) => {
 })
 
 
-const changePassword = asyncHandler((req,res)=>{
-          const {oldPassword , newPassword} =  req.body;
+const changePassword = asyncHandler((req, res) => {
+  const { oldPassword, newPassword } = req.body;
 
 
 })

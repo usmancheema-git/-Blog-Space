@@ -34,19 +34,22 @@ const userSchema = mongoose.Schema({
         }
     ],
 
-    imageAvatar: {
+    avatar: {
+        type: String    
+    },
+    coverImage: {
         type: String
     },
 
     refreshToken: {
         type: String
     },
-    
+
     about: {
         type: String,
         default: ""
     },
-    
+
 }, { timestamps: true })
 /** @type {import('./User.schema.js').User} */
 
@@ -54,7 +57,7 @@ const userSchema = mongoose.Schema({
 
 userSchema.methods.genrateAccessToken = function () {
     return jwt.sign({
-        _id  : this._id,
+        _id: this._id,
         email: this.email,
         username: this.username
     }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY })
