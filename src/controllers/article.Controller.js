@@ -112,16 +112,75 @@ const updateArticle = asyncHandler(async (req, res) => {
 
 
 const getPlatformStats = asyncHandler(async (req, res) => {
-    const totalArticles = await Article.countDocuments();
-    const totalUsers = await User.countDocuments();
-    // Returning dummy 99.9% for uptime since we don't have a real uptime tracker
+    const stats = await Article.aggregate([
+        {
+            $facet: {
+                totalArticles: [
+                    { $count: 'count' }
+                ],
+
+
+                totalUsers: [
+                    {
+                        $lookup: {
+                            from: "users",
+                            pipeline: [{ $count: 'count' }],
+                            as: 'userCount'
+                        }
+                    }
+                ]
+
+
+            }
+        }
+    ]
+    )
+    const totalArticles = stats[0]?.totalArticles[0]?.count || 0
+    const totalUsers = stats[0]?.totalUsers[0]?.userCount[0]?.count || 0
+
     return res.status(200).json({
         articles: totalArticles,
         users: totalUsers,
         uptime: "99.9%"
     });
+
 });
 
+
+const serachArticle = asyncHandler(async (req, res)=>{
+
+    const {query} = req.query;
+
+    if (!query || query == "" || query == null) return res.status(401).json({ msg: 'quey parameter missing' });
+    
+    const searchResult = await Article.aggregate([
+  {
+    $match: {
+      title: query
+    }
+  },
+  {
+    $sort: {
+      title: -1   
+    }
+  },
+  {
+    $project: {
+      _id :0,
+      title :1,
+			content: 1,
+			createdBy : 1	,
+      createdAt :1
+    }
+  }
+])
+
+    return res.json({msg:'searchArticele',
+        sr
+    });
+
+
+});
 
 export {
     createArticle,
@@ -129,5 +188,6 @@ export {
     getSingleArticle,
     deleteArticle,
     updateArticle,
-    getPlatformStats
+    getPlatformStats,
+    serachArticle
 };

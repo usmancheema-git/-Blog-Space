@@ -49,7 +49,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const user = await User.create({
-    username: username,
+    username,
     email: email,
     avatar: avatar,
     coverImage: coverImage || "",
@@ -61,7 +61,7 @@ const registerUser = asyncHandler(async (req, res) => {
     return res.status(400).json({ msg: ' error occur in creating User ' })
 
   } else {
-    res.status(200).json({ msg: '  User Created Successfuly ' })
+    res.status(200).json({ msg: ' User Created Successfuly ' })
 
   }
 

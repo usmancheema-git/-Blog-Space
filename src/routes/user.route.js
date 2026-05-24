@@ -31,6 +31,6 @@ router.get("/current-user", JwtVerification, currentUser);
 router.get('/:username', JwtVerification, getUserProfile);
 router.delete('/:userId', JwtVerification, deleteUser);
 
-router.post('/followers/:id', userFollowersystem);
-router.post('/followers/:id', userUnFollowersystem);
+// router.post('/followers/:id', userFollowersystem);
+// router.post('/followers/:id', userUnFollowersystem);
 export { router };

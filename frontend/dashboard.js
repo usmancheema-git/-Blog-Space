@@ -26,23 +26,7 @@ function renderDashboard() {
         </div>
       </div>
 
-      <!-- Update Account Details -->
-      <div class="card">
-        <h2 class="card-title">✏️ Update Account Details</h2>
-        <form id="updateAccountForm" class="form">
-          <div class="form-group">
-            <label>Username</label>
-            <input id="update-username" type="text" placeholder="New username" required />
-          </div>
-          <div class="form-group">
-            <label>Email</label>
-            <input id="update-email" type="email" placeholder="New email" required />
-          </div>
-          <button type="submit" class="btn btn-primary">Update Account</button>
-        </form>
-        <div id="updateResult" class="result-box"></div>
-      </div>
-
+     
       <!-- Update Bio -->
       <div class="card">
         <h2 class="card-title">📝 Update Bio / About</h2>
@@ -60,7 +44,7 @@ function renderDashboard() {
       <div class="card" style="border-color: rgba(220, 38, 38, 0.3);">
         <h2 class="card-title" style="background: none; color: var(--danger); -webkit-text-fill-color: var(--danger);">🚨 Danger Zone</h2>
         <p class="muted" style="margin-bottom: 20px;">Once you delete your account, there is no going back. Please be certain.</p>
-        <button id="deleteAccountBtn" class="btn btn-danger" style="width: 100%;">Delete My Account</button>
+        <button id="deleteAccountBtn" class="btn btn-danger" style="width: 100%;"> Delete My Account</button>
         <div id="deleteAccountResult" class="result-box"></div>
       </div>
 
